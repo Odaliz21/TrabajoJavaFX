@@ -2,8 +2,10 @@
 package agenda;
 
 import agenda.model.Person;
+import agenda.vista.BirthdayStatisticsController;
 import agenda.vista.PersonEditDialogController;
 import agenda.vista.PersonOverviewController;
+import agenda.vista.RootLayoutController;
 import java.io.IOException;
 
 import javafx.application.Application;
@@ -75,6 +77,8 @@ public class MainApp extends Application {
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
+             RootLayoutController controller = loader.getController();
+             controller.setMainApp(this);
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -140,6 +144,32 @@ public class MainApp extends Application {
             return false;
         }
     }
+    /**
+ * Opens a dialog to show birthday statistics.
+ */
+public void showBirthdayStatistics() {
+    try {
+        // Load the fxml file and create a new stage for the popup.
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("vista/BirthdayStatistics.fxml"));
+        AnchorPane page = (AnchorPane) loader.load();
+        Stage dialogStage = new Stage();
+        dialogStage.setTitle("Birthday Statistics");
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        dialogStage.initOwner(primaryStage);
+        Scene scene = new Scene(page);
+        dialogStage.setScene(scene);
+
+        // Set the persons into the controller.
+        BirthdayStatisticsController controller = loader.getController();
+        controller.setPersonData(personData);
+
+        dialogStage.show();
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
 
     /**
      * Returns the main stage.
